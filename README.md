@@ -1,2 +1,1 @@
-# ytdlpwav1
- A script which makes sure YouTube videos download in the AV1 format using yt-dlp
+A sample command-line application providing basic argument parsing with an entrypoint in `bin/`.
