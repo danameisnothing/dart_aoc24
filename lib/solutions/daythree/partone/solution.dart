@@ -1,7 +1,7 @@
 import 'dart:io';
 
-void exec() {
-  final input = File("lib/daythree/partone/input.txt").readAsStringSync();
+void execD3P1() {
+  final input = File("lib/solutions/daythree/partone/input.txt").readAsStringSync();
 
   final filter = RegExp(r"mul\(\d+,\d+\)");
   final matches = filter.allMatches(input);

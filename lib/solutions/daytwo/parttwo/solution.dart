@@ -2,7 +2,7 @@ import 'dart:io';
 
 const faultTolerance = 1;
 
-List<List<int>> processInput(List<String> lines) {
+List<List<int>> _processInput(List<String> lines) {
   final reports = <List<int>>[];
   for (String str in lines) {
     str = str.trim(); // yikes
@@ -19,7 +19,7 @@ List<List<int>> processInput(List<String> lines) {
   return reports;
 }
 
-bool getLevelIncreasingTrend(List<int> report) {
+bool _getLevelIncreasingTrend(List<int> report) {
   final areReportsIncreasing = <bool>[];
   for (int i = 1; i < report.length; i++) {
     final elBefore = report.elementAt(i - 1);
@@ -38,14 +38,14 @@ bool getLevelIncreasingTrend(List<int> report) {
   return (!howManyTrue.compareTo(howManyFalse).isNegative) ? true : false;
 }
 
-void exec() {
-  final reports = processInput(File("lib/daytwo/parttwo/input.txt").readAsLinesSync());
+void execD2P2() {
+  final reports = _processInput(File("lib/solutions/daytwo/parttwo/input.txt").readAsLinesSync());
 
   int total = 0;
 
   for (List<int> report in reports) {
     int totalViolations = 0;
-    bool isReportIncreasing = getLevelIncreasingTrend(report);
+    bool isReportIncreasing = _getLevelIncreasingTrend(report);
     print(isReportIncreasing);
 
     // Try elBefore deletion, then elNow deletion. If both have a fault value above 1, then ignore

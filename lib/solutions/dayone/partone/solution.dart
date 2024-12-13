@@ -1,7 +1,7 @@
 import 'dart:io';
 
-void exec() {
-  final input = File("lib/dayone/parttwo/input.txt").readAsLinesSync();
+void execD1P1() {
+  final input = File("lib/solutions/dayone/partone/input.txt").readAsLinesSync();
 
   final firstEls = <int>[];
   final secEls = <int>[];
@@ -21,11 +21,14 @@ void exec() {
     secEls.add(int.parse(second));
   }
 
+  firstEls.sort();
+  secEls.sort();
+
   int total = 0;
 
   // Assuming both lists are of equal length
   for (int i = 0; i < firstEls.length; i++) {
-    total += firstEls.elementAt(i) * secEls.where((x) => x == firstEls.elementAt(i)).length;
+    total += (secEls.elementAt(i) - firstEls.elementAt(i)).abs();
   }
 
   print(total);

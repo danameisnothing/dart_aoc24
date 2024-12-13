@@ -1,6 +1,6 @@
 import 'dart:io';
 
-List<String> processInput(String input) {
+List<String> _processInput(String input) {
   final instructions = <String>[];
   final matches = RegExp(r"(mul\(\d+,\d+\))|(don't\(\))|(do\(\))").allMatches(input);
 
@@ -12,8 +12,8 @@ List<String> processInput(String input) {
   return instructions;
 }
 
-void exec() {
-  final instructions = processInput(File("lib/daythree/parttwo/input.txt").readAsStringSync());
+void execD3P2() {
+  final instructions = _processInput(File("lib/solutions/daythree/parttwo/input.txt").readAsStringSync());
 
   int total = 0;
   bool mulEnabled = true; // Starts enabled

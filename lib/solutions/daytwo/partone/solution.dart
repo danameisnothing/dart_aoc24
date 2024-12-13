@@ -1,7 +1,7 @@
 import 'dart:io';
 
-void exec() {
-  final input = File("lib/daytwo/partone/input.txt").readAsLinesSync();
+void execD2P1() {
+  final input = File("lib/solutions/daytwo/partone/input.txt").readAsLinesSync();
 
   final reports = <List<int>>[];
 
