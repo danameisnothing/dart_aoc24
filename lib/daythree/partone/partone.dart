@@ -1,9 +1,5 @@
 import 'dart:io';
 
-void processInput(String input) {
-
-}
-
 void exec() {
   final input = File("lib/daythree/partone/input.txt").readAsStringSync();
 
