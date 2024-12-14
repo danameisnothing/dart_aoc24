@@ -1,123 +1,31 @@
 import 'dart:io';
 
-const targetString = "XMAS";
+import 'package:dart_aoc24/utils/utils.dart';
 
-/*class SearchDirection {
-  static int get topLeft => 0;
-  static int get top => 1;
-  static int get topRight => 2;
-  static int get left => 3;
-  static int get right => 4;
-  static int get bottomLeft => 5;
-  static int get bottom => 6;
-  static int get bottomRight => 7;
-}*/
-enum SearchDirection {
-  topLeft,
-  top,
-  topRight,
-  left,
-  right,
-  bottomLeft,
-  bottom,
-  bottomRight
-}
-
-class Vector2 {
-  int x, y;
-
-  Vector2(this.x, this.y);
-}
-
-class NeighbourCollectionData {
-  Vector2 pos;
-  SearchDirection dir;
-
-  NeighbourCollectionData(this.pos, this.dir);
-}
-
-class NeighbourCheckReturnData {
-  List<NeighbourCollectionData> data;
-
-  NeighbourCheckReturnData() : data = [];
-}
-
-// Returns an index list of found charTargets
-// AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-NeighbourCheckReturnData _neighbourCheck(List<List<String>> input, int xIndex, int yIndex, String charTarget) {
-  final returnData = NeighbourCheckReturnData();
-  // Top left
-  if (!(xIndex - 1).isNegative && !(yIndex - 1).isNegative) {
-    if (input.elementAt(yIndex - 1).elementAt(xIndex - 1) == charTarget) {
-      returnData.data.add(NeighbourCollectionData(Vector2(xIndex - 1, yIndex - 1), SearchDirection.topLeft));
-    }
-  }
-  // Top
-  if (!(yIndex - 1).isNegative) {
-    if (input.elementAt(yIndex - 1).elementAt(xIndex) == charTarget) {
-      returnData.data.add(NeighbourCollectionData(Vector2(xIndex, yIndex - 1), SearchDirection.top));
-    }
-  }
-  // Top right (Assuming all lines are of equal length)
-  if (xIndex + 1 < input.first.length && !(yIndex - 1).isNegative) {
-    if (input.elementAt(yIndex - 1).elementAt(xIndex + 1) == charTarget) {
-      returnData.data.add(NeighbourCollectionData(Vector2(xIndex + 1, yIndex - 1), SearchDirection.topRight));
-    }
-  }
-  // Left
-  if (!(xIndex - 1).isNegative) {
-    if (input.elementAt(yIndex).elementAt(xIndex - 1) == charTarget) {
-      returnData.data.add(NeighbourCollectionData(Vector2(xIndex - 1, yIndex), SearchDirection.left));
-    }
-  }
-  // Right (Assuming all lines are of equal length)
-  if (xIndex + 1 < input.first.length) {
-    if (input.elementAt(yIndex).elementAt(xIndex + 1) == charTarget) {
-      returnData.data.add(NeighbourCollectionData(Vector2(xIndex + 1, yIndex), SearchDirection.right));
-    }
-  }
-  // Bottom left (Assuming all lines are of equal length)
-  if (!(xIndex - 1).isNegative && yIndex + 1 < input.length) {
-    if (input.elementAt(yIndex + 1).elementAt(xIndex - 1) == charTarget) {
-      returnData.data.add(NeighbourCollectionData(Vector2(xIndex - 1, yIndex + 1), SearchDirection.bottomLeft));
-    }
-  }
-  // Bottom (Assuming all lines are of equal length)
-  if (yIndex + 1 < input.length) {
-    if (input.elementAt(yIndex + 1).elementAt(xIndex) == charTarget) {
-      returnData.data.add(NeighbourCollectionData(Vector2(xIndex, yIndex + 1), SearchDirection.bottom));
-    }
-  }
-  // Bottom right (Assuming all lines are of equal length)
-  if (xIndex + 1 < input.first.length && yIndex + 1 < input.length) {
-    if (input.elementAt(yIndex + 1).elementAt(xIndex + 1) == charTarget) {
-      returnData.data.add(NeighbourCollectionData(Vector2(xIndex + 1, yIndex + 1), SearchDirection.bottomRight));
-    }
-  }
-
-  return returnData;
-}
+const _targetString = "XMAS";
 
 // Assume we are starting with "X"
-bool _beginSearch(List<List<String>> data, int xCoor, int yCoor, int currProgressInTargetStr, [SearchDirection? searchDir]) {
-  if (currProgressInTargetStr >= targetString.length) {
-    return true;
+int _beginSearch(List<List<String>> data, Vector2 origin, int currProgressInTargetStr, [SearchDirection? searchDir]) {
+  // Check for if we found the full sentence (For the very end of the recursion tree)
+  if (currProgressInTargetStr >= _targetString.length) {
+    return 1;
   }
 
-  final ret = _neighbourCheck(data, xCoor, yCoor, targetString[currProgressInTargetStr]);
+  final ret = neighbourCheck(data, origin.x, origin.y, _targetString[currProgressInTargetStr]);
 
   Iterable<NeighbourCollectionData> target = ret.data;
 
   if (searchDir != null) {
     target = target.where((x) => x.dir == searchDir);
   }
+
+  List<int> retVals = <int>[];
   
   for (NeighbourCollectionData coors in target) {
-    print("Checking ${targetString[currProgressInTargetStr - 1]} to ${targetString[currProgressInTargetStr]} ($xCoor, $yCoor) to (${coors.pos.x}, ${coors.pos.y})");
-    return _beginSearch(data, coors.pos.x, coors.pos.y, currProgressInTargetStr + 1, coors.dir);
+    retVals.add(_beginSearch(data, coors.pos, currProgressInTargetStr + 1, coors.dir));
   }
 
-  return false;
+  return retVals.where((x) => x.sign == 1).length;
 }
 
 void execD4P1() {
@@ -131,9 +39,8 @@ void execD4P1() {
   for (int y = 0; y < data.length; y++) {
     for (int x = 0; x < data.elementAt(y).length; x++) {
       // our starting point
-      if (data.elementAt(y).elementAt(x) == targetString.substring(0, 1)) {
-        total += (_beginSearch(data, x, y, 1) == true) ? 1 : 0;
-        print("");
+      if (data.elementAt(y).elementAt(x) == _targetString.substring(0, 1)) {
+        total += _beginSearch(data, Vector2(x, y), 1);
       }
     }
   }
