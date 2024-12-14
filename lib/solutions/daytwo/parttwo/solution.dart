@@ -46,13 +46,11 @@ void execD2P2() {
   for (List<int> report in reports) {
     int totalViolations = 0;
     bool isReportIncreasing = _getLevelIncreasingTrend(report);
-    print(isReportIncreasing);
 
     // Try elBefore deletion, then elNow deletion. If both have a fault value above 1, then ignore
     // FIXME: CLEANUP
     final backupReport = List.from(report); // So it copies
     bool detectedFault = false;
-    print("Trying elNow deletion method");
     while (true) {
       detectedFault = false;
       for (int i = 1; i < report.length; i++) {
@@ -63,7 +61,6 @@ void execD2P2() {
 
         // Check if sign is the same as initial pattern || Checks if adjacent levels differ within the threshold, the "is neither an increase or a decrease" case is already handled here
         if ((!delta.isNegative != isReportIncreasing) || (delta.abs() < 1 || delta.abs() > 3)) {
-          print("Deleting $elNow at index $i");
           report.removeAt(i); // elNow
           totalViolations++;
           detectedFault = true;
@@ -75,7 +72,6 @@ void execD2P2() {
 
     if (totalViolations > faultTolerance) {
       totalViolations = 0;
-      print("Trying elBefore deletion method");
       report = List.from(backupReport);
       while (true) {
         detectedFault = false;
@@ -87,7 +83,6 @@ void execD2P2() {
 
           // Check if sign is the same as initial pattern || Checks if adjacent levels differ within the threshold, the "is neither an increase or a decrease" case is already handled here
           if ((!delta.isNegative != isReportIncreasing) || (delta.abs() < 1 || delta.abs() > 3)) {
-            print("Deleting $elBefore at index ${i - 1}");
             report.removeAt(i - 1); // elBefore
             totalViolations++;
             detectedFault = true;
@@ -98,7 +93,6 @@ void execD2P2() {
       }
     }
 
-    print("$report : $totalViolations");
     if (totalViolations <= faultTolerance) total++;
   }
 

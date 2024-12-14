@@ -6,3 +6,5 @@ export 'solutions/daythree/partone/solution.dart';
 export 'solutions/daythree/parttwo/solution.dart';
 export 'solutions/dayfour/partone/solution.dart';
 export 'solutions/dayfour/parttwo/solution.dart';
+export 'solutions/dayfive/partone/solution.dart';
+export 'solutions/dayfive/parttwo/solution.dart';
