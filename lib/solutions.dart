@@ -8,3 +8,4 @@ export 'solutions/dayfour/partone/solution.dart';
 export 'solutions/dayfour/parttwo/solution.dart';
 export 'solutions/dayfive/partone/solution.dart';
 export 'solutions/dayfive/parttwo/solution.dart';
+export 'solutions/daysix/partone/solution.dart';
